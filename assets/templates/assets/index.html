@@ -1,0 +1,113 @@
+{% extends "assets/master.html" %}
+{% load bootstrap_icons %}
+{% block title %}Ecex's Assets Main page{% endblock %}
+{% block content %}
+<div class="card bg-light text-dark shadow">
+  <div class="card-body">
+    <div class="search-form-field">
+      <label>Filtrar</label>
+      <input type="text" class="form-control" id="txtParam" value="{{ request.GET.param }}"/>
+    </div>
+    <div class="search-form-field">
+      <label>Cliente {{request.GET.customer}}</label>
+      <select class="form-select" id="txtCustomer">
+        <option value="0">---</option>
+        {% for customer in customers %}
+            <option value="{{ customer.pk }}">{{ customer.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="search-form-field">
+      <div class="btn-group" role="group" aria-label="Basic mixed styles example" style="margin-left: 10px;">
+        <input type="radio" class="btn-check" name="options-outlined" id="chkEntrada" autocomplete="off" {% if request.GET.status != 'Salida' %} checked{% endif %} onclick="modoSalida()">
+        <label class="btn btn-outline-success" for="chkEntrada">Entrada</label>
+        <input type="radio" class="btn-check" name="options-outlined" id="chkSalida" autocomplete="off" {% if request.GET.status == 'Salida' %} checked{% endif %} onclick="modoSalida()">
+        <label class="btn btn-outline-danger" for="chkSalida">Salida</label>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="buscar()">{% bs_icon 'search' %}</button>
+    <hr/>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Asset</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Descripcion</th>
+          <th scope="col">Regimen</th>
+          <th scope="col">Aduana</th>
+          <th scope="col">Patente</th>
+          <th scope="col">Pedimento</th>
+          <th scope="col">Factura</th>
+          <th scope="col">Marca</th>
+          <th scope="col">Modelo</th>
+          <th scope="col">Serie</th>
+          <th scope="col">Ubicacion</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for asset in assets %}
+          <tr id="row_{{ asset.pk }}"{% if asset.warnings %} class="table-warning"{% endif %}>
+            <td style="font-size:0.9em">
+              <a href="{% url 'assets:edit' asset.pk%}" role="button" style="width: 100px; text-decoration: none;" class="btn btn-link"
+              {% if asset.warnings %}
+                  data-toggle="tooltip" data-placement="left" data-html="true" title="{% for warning in asset.warnings %}{{warning.message}}. {% endfor %}"
+                  {% else %}
+                {% endif %}
+              >
+              {{ asset.asset_identifier }} {% if asset.warnings %} <label style="display: inline;">*</label> {% endif %}
+              </a>
+            </td>
+            <td style="font-size:0.9em">{{ asset.asset }}</td>
+            <td>{{ asset.customer.name }}</td>
+            <td style="font-size:0.8em; min-width:110px;">{{ asset.description }}</td>
+            <td>{{ asset.regime }}</td>
+            <td>{{ asset.custom }}</td>
+            <td>{{ asset.patent }}</td>
+            <td>{{ asset.pediment }}</td>
+            <td>{{ asset.invoice }}</td>
+            <td>{{ asset.brand }}</td>
+            <td>{{ asset.model }}</td>
+            <td>{{ asset.serial_number }}</td>
+            <td>{{ asset.storage_location }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  function buscar()
+  {
+    const param = document.getElementById('txtParam').value.trim();
+    const cliente = document.getElementById('txtCustomer').value;
+    const esEntrada = document.getElementById('chkEntrada').checked;
+    const params = {};
+
+    if(param != "")
+    {
+      params.param = param;
+    }
+    if(esEntrada){
+      params.status = 'Entrada';
+    } else {
+      params.status = 'Salida';
+    }
+    if(cliente != "0")
+    {
+      params.customer = cliente;
+    }
+
+    const queryString = new URLSearchParams(params).toString();
+    location.href = "{% url 'assets:index' %}?"+queryString;
+  }
+
+  window.onload = function() {
+        customer_from_request = {% if request.GET.customer %} "{{request.GET.customer}}" {% else %} 0 {% endif %};
+        document.getElementById('txtCustomer').value = customer_from_request;
+    };
+</script>
+{% endblock %}

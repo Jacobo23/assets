@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% load bootstrap_icons %}
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/master.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <img class="nav-logo" src="/media/logo.png">
+        <a class="navbar-brand" href="{% url 'assets:index'%}">Ecex - Assets</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>        
+        <li class="nav-item">
+          <a class="nav-option" aria-current="page" href="{% url 'assets:create'%}">Crear</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-option" aria-current="page" href="{% url 'assets:index'%}">Buscar</a>
+        </li>
+        <div class="collapse navbar-collapse" id="navbarMain">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'assets:index'%}">{% bs_icon 'house-fill' %}</a>
+            </li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">              
+                <label class="nav-link">{{user}}</label>
+              </li>
+              <li class="nav-item">              
+                <a class="nav-link" href="{% url 'assets:logout'%}">Log out</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'assets:login'%}">Log in</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <div class="container jumbo">
+        <br>
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

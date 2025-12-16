@@ -1,0 +1,121 @@
+<html>
+   
+    <head>
+         
+        <style>
+        @page {
+            size: 11cm 7cm; /* tamano de la hoja */
+            margin: 0.2cm; /* margenes */
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Ensure html and body also take full height */
+            width: 100%;  /* Ensure html and body also take full width */
+        }
+        body {
+            display: flex;
+        }
+        .label-container-back {
+            background-color: rgb(209, 207, 207);
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+
+        }
+        .label-container {
+            border: 2px solid black;
+            width: 94%;
+            height: 90%;
+            margin: 2.5%;
+            border-radius: 10px;
+            background-color: white;
+        }
+        .label-header {
+            border-bottom: 2px solid black;
+            width: 100%;
+            margin-top: -15px;
+        }
+        .logo
+        {
+            width: 25%;
+            margin-top: 25px;
+            display: inline-block;
+            position: relative;
+            left: 10px;
+        }
+        .title {
+            width: 70%;
+            display: inline-block;
+            text-align: center;
+            margin-top: -10px;
+            position: relative;
+            top: -10px;
+            left: -20px;
+            
+        }
+        .title h2{
+            margin-bottom: 1px;
+            margin-top: -10px;
+            padding: 0px;
+        }
+        .title h3{
+            margin-top: 1px;
+            margin-bottom: 10px;
+            padding: 0px;
+        }
+        .desc label
+        {
+            display: block;
+            font-size: x-large;
+        }
+        .desc
+        {
+            width: 60%;
+            display: inline-block;
+            margin: 0px;
+            position: relative;
+            top:-40px;
+            text-align: center;
+        }
+        .qr
+        {
+            display: inline-block;
+            width: 30%;
+            margin: 0px;
+            position: relative;
+            left: 10px;
+        }
+        .label-body
+        {
+            padding-top: 10px;
+        }
+
+    </style>
+    </head>
+    <body>
+
+        <div class="label-container-back">
+            <div class="label-container">
+                <div class="label-header">
+                    <img class="logo" src="{{url}}">
+                    <div class="title">
+                        <h2>David's Services</h2>
+                        <h3>International</h3>
+                    </div>
+                </div>
+                <div class="label-body">
+                    <div class="desc">
+                        <label>{{asset.asset}}</label>
+                        <label>{{asset.storage_location}}</label>
+                    </div>
+                    <img class="qr" src="{{qr}}">
+                </div>
+                <div class="label-footer">
+
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,177 @@
+body {
+        /* background-color: rgb(173, 79, 79); */
+}
+.nav-logo
+{
+    width: 60px;
+    margin-right: 20px;
+}
+.navbar
+{
+    border-bottom: 5px solid rgb(147, 0, 0);
+}
+.nav-option
+{
+    text-decoration: none; 
+    color: white; 
+    margin-left: 30px; 
+    border: 1px solid rgb(58, 58, 58); 
+    padding: 10px;
+}
+.nav-option:hover
+{
+    background-color: #696969;
+    text-decoration: none; 
+    color: white; 
+}
+.menu-separator
+{
+    margin-bottom: 10px;
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(to right, rgb(17, 17, 17), rgb(192, 192, 192)) 1;
+}
+#main-menu a
+{
+    text-decoration: none;
+    color: black;
+    vertical-align:middle;
+    transition: 0.3s;
+    padding: 5px;
+    border-bottom: 2px solid transparent;
+}
+#main-menu svg
+{
+    position: relative;
+    top: -2px;
+}
+#main-menu li
+{
+    text-decoration: none;
+    color: black;
+    vertical-align: bottom;
+    transition: 0.3s;
+    padding: 2px;
+    width: 200px;
+}
+#main-menu li:hover {
+  box-shadow: -1px -9px 18px -12px rgba(107,107,107,0.75) inset;
+}
+
+.form-field
+{
+    margin: 3px;
+    width: 450px;
+}
+.form-field > label
+{
+    width: 150px;
+    display: inline-block;
+}
+.search-form-field
+{
+    display: inline-block;
+    margin-left: 10px;
+}
+.search-form-field > label
+{
+    display: inline-block;
+}
+.search-form-field > input
+{
+    display: inline-block;
+    width: 200px;
+}
+.search-form-field > select
+{
+    display: inline-block;
+    width: 200px;
+}
+.form-field > input
+{
+    width: 250px;
+    display: inline-block;
+}
+
+.form-field > select
+{
+    width: 250px;
+    display: inline-block;
+}
+
+.vertical-separator
+{
+    border-image: linear-gradient(to bottom, rgb(183, 183, 183), rgb(245, 245, 245)) 1;
+    border-left: 1px solid #5f5f5f; /* Width, style, and color */
+    padding-left: 15px; 
+}
+.imgCard
+{
+    margin-bottom: 20px;
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+    position: relative;
+    max-width: 200px;
+    display: inline-block;
+}
+.imgCard > button
+{
+    position: absolute;
+    z-index: 2;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+.fileCard
+{
+    margin: 8px;
+    background-color: rgb(249, 249, 249);
+    display: inline-block;
+    border-radius: 3px;
+    transition: margin 0.5s;
+    box-shadow: 1px 2px 5px 0px rgba(105,105,105,0.75);
+    padding-left: 8px;
+}
+.fileCard:hover
+{
+    background-color: rgb(222, 222, 222);
+    margin: 13px;
+}
+.fileCard > button
+{
+    display: inline;
+    margin-left: 10px;
+}
+.fileCard > a
+{
+    text-decoration: none;
+    color: rgb(61, 61, 61);
+    font-size: small;
+}
+.div-historial
+{
+    margin-bottom: 5px;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+}
+.div-historial:hover
+{
+    background-color: #f0f0f0;
+}
+.div-historial-user
+{
+    display: block;
+    font-weight: bold;
+}
+.div-historial-action
+{
+    width: 400px;
+}
+.div-historial-date
+{
+    font-size: small;
+    color: #3c3c3c;
+    float: right;
+}
+.card-body
+{
+    overflow: scroll;
+}

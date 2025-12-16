@@ -1,0 +1,18 @@
+{% extends "assets/master.html" %}
+{% load bootstrap_icons %}
+{% block title %}Ecex's Assets Main page{% endblock %}
+{% block content %}
+{% load static %}
+<div id="main-menu">
+  <div class="menu-separator"><h5>Activos</h4></div>
+  <ul>
+    <li><a href="{% url 'assets:index'%}">{% bs_icon 'card-list' %}Lista de Activos</a></li>
+    <li><a href="{% url 'assets:create'%}">{% bs_icon 'plus-square' %}Crear nuevo</a></li>
+  </ul>
+  <div class="menu-separator"><h5>Catalogos</h4></div>
+  <ul>
+    <li><a>Clientes</a></li>
+    <li><a>Misc.</a></li>
+  </ul>
+</div>
+{% endblock %}

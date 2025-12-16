@@ -1,0 +1,365 @@
+{% extends "assets/master.html" %}
+{% load bootstrap_icons %}
+{% block title %}Ecex's Assets Main page{% endblock %}
+{% block content %}
+<div class="card bg-light text-dark shadow">
+  <div class="card-body">
+    <h3 class="card-title">{{ title }} {{asset.status.name}}</h3>
+    <hr/>
+    <div class="row d-flex flex-wrap">
+      <div class="col-md-6 d-flex flex-column">
+        <input type="hidden" id="asset_id" value="{{ asset.pk }}"/>
+        {% if asset is not None %}
+        <div class="form-field">
+          <label>Asset ID</label>
+          <input type="text" class="form-control" id="txtAssetID" value="{{ asset.asset_identifier }}" disabled/>
+        </div>
+        {% endif %}
+        <div class="form-field">
+          <label>Asset</label>
+          <input type="text" class="form-control" id="txtAsset" value="{{ asset.asset }}"/>
+        </div>
+        <div class="form-field">
+          <label>Cliente</label>
+          <select class="form-select" id="txtCustomer" {% if asset is not None %}disabled{% endif %}>
+            <option selected value="0">---</option>
+            {% for customer in customers %}
+                <option value="{{ customer.pk }}"{% if customer.pk == asset.customer.pk %}selected{% endif %}>{{ customer.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Descripcion</label>
+          <input type="text" class="form-control" id="txtDescription" value="{{ asset.description }}"/>
+        </div>
+        <div class="form-field">
+          <label>Marca</label>
+          <input type="text" class="form-control" id="txtBrand" value="{{ asset.brand }}"/>
+        </div>
+        <div class="form-field">
+          <label>Modelo</label>
+          <input type="text" class="form-control" id="txtModel" value="{{ asset.model }}"/>
+        </div>
+        <div class="form-field">
+          <label>Serie</label>
+          <input type="text" class="form-control" id="txtSerialN" value="{{ asset.serial_number }}"/>
+        </div>
+        <div class="form-field">
+          <label>Ubicacion</label>
+          <input type="text" class="form-control" id="txtLocation" value="{{ asset.storage_location }}"/>
+        </div>
+        
+        <div class="form-field">
+          <label>Factura</label>
+          <input type="text" class="form-control" id="txtInvoice" value="{{ asset.invoice }}"/>
+        </div>
+        <div class="form-field">
+          <label>Fecha Factura</label>
+          <input type="date" class="form-control" id="txtInvDate" value="{{asset.pediment_invoice_date|date:'Y-m-d'}}"/>
+        </div>
+        <div class="form-field">
+          <label>Regimen</label>
+          <select class="form-select" id="txtRegime">
+            <option selected value="0">---</option>
+            {% for regime in regimes %}
+                <option value="{{ regime.pk }}" {% if regime.pk == asset.regime.pk %}selected{% endif %}>{{ regime.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Aduana</label>
+          <select class="form-select" id="txtCustom">
+            <option selected value="0">---</option>
+            {% for custom in customs %}
+                <option value="{{ custom.pk }}" {% if custom.pk == asset.custom.pk %}selected{% endif %}>{{ custom.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Patente</label>
+          <input type="text" class="form-control" id="txtPatent" value="{{ asset.patent }}"/>
+        </div>
+        <div class="form-field">
+          <label>Pedimento</label>
+          <input type="text" class="form-control" id="txtPediment" value="{{ asset.pediment }}"/>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex flex-column vertical-separator">
+        <div class="form-field">
+          <label>Notas</label>
+          <textarea id="txtNotes" rows="5" cols="40">{{ asset.notes }}</textarea>
+        </div>
+        <div class="form-field" id="campo_salida" 
+        {% if asset.status.name == 'Entrada' or asset.motivo_salida is None or asset.motivo_salida == '' %} style="display: none;"{% endif %}>
+          <label>Motivo de Salida</label>
+          <input type="text" class="form-control" id="txtMotivo" list="motivoOpciones" value="{{asset.motivo_salida}}">
+          <datalist id="motivoOpciones">
+            <option value="Defecto"></option>
+            <option value="Robo"></option>
+            <option value="Test"></option>
+          </datalist>
+        </div>
+        {% if asset is not None %}
+          <hr/>
+          <h5 class="card-title">Acciones</h5>
+          <div class="d-grid gap-2 d-md-block">
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+              <input type="radio" class="btn-check" name="options-outlined" id="chkEntrada" autocomplete="off" {% if asset.status.name == 'Entrada' %} checked{% endif %} onclick="modoSalida()">
+              <label class="btn btn-outline-success btn-sm" for="chkEntrada">Entrada</label>
+              <input type="radio" class="btn-check" name="options-outlined" id="chkSalida" autocomplete="off" {% if asset.status.name == 'Salida' %} checked{% endif %} onclick="modoSalida()">
+              <label class="btn btn-outline-danger btn-sm" for="chkSalida">Salida</label>
+            </div>
+            <button style="margin-left: 20px;" class="btn btn-secondary btn-sm" type="button" onclick=verQr("{% url 'assets:seeQR' asset.pk%}")>{% bs_icon 'qr-code-scan'%}</button>
+          </div>
+        {% endif %}
+        <hr/>
+        <h5 class="card-title">Adjuntos</h5>
+        <div class="form-field">
+          <label>Archivos</label>
+          <input type="file" id="files" class="form-control" accept=".pdf, .xls, .xlsx" multiple>
+        </div>
+        <div class="form-field">
+          <label>Imagenes</label>
+          <input type="file" id="images" class="form-control" accept="image/*" multiple>
+        </div>
+        <br/>
+        {% if asset is not None %}
+        <div class="accordion" id="imgAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiles" aria-expanded="false" aria-controls="collapseFiles">
+                Archivos cargados ({{asset.getFilesCount}})
+              </button>
+            </h2>
+            <div id="collapseFiles" class="accordion-collapse collapse" data-bs-parent="#imgAccordion">
+              <div class="accordion-body">
+                {% for file in asset.getFiles %}
+                  <div class="fileCard" id="file_card_{{file.pk}}">
+                    <a href="{{ file.file.url }}">{{ file.filename }}</a>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="deleteFile('{{ file.pk }}')">{% bs_icon 'x' %}</button>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Imagenes cargadas ({{asset.getImagesCount}})
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#imgAccordion">
+              <div class="accordion-body">
+                {% for img in asset.getImages %}
+                  <div class='imgCard' id="img_card_{{img.pk}}">
+                    <button class="btn btn-light btn-sm btn-del" type="button" onclick="deleteImg('{{ img.pk }}')">{% bs_icon 'x' %}</button>
+                    <img src="{{ img.image.url }}" class="img-thumbnail"/>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% if asset is not None %}
+          <hr/>
+
+
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseT" aria-expanded="false" aria-controls="collapseOne">
+                Historial
+              </button>
+            </h2>
+            <div id="collapseT" class="accordion-collapse collapse" data-bs-parent="#transactionsAccordion">
+              <div class="accordion-body">
+                {% for transaction in asset.getTransactions %}
+                  <div class="div-historial">
+                    <label class="div-historial-user">{{ transaction.user }}</label>
+                    <label class="div-historial-action">{{ transaction.action }}</label>
+                    <label class="div-historial-date">{{ transaction.date }}</label>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          
+        {% endif %}
+    </div>
+    <hr/>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button class="btn btn-primary" type="button" onclick="onSave()">Guardar</button>
+    </div>
+  </div>
+  
+</div>
+{% csrf_token %}
+{% endblock %}
+{% block scripts %}
+<script>
+  function onSave()
+  {
+    //procesa los campos
+    let asset_id = document.getElementById("asset_id").value;
+    let Asset = document.getElementById("txtAsset").value;
+    let Customer = document.getElementById("txtCustomer").value;
+    let Description = document.getElementById("txtDescription").value;
+    let Brand = document.getElementById("txtBrand").value;
+    let Model = document.getElementById("txtModel").value;
+    let SerialN = document.getElementById("txtSerialN").value;
+    let Location = document.getElementById("txtLocation").value;
+    let Pediment = document.getElementById("txtPediment").value;
+    let Invoice = document.getElementById("txtInvoice").value;
+    let InvDate = document.getElementById("txtInvDate").value;
+    let Regime = document.getElementById("txtRegime").value;
+    let Custom = document.getElementById("txtCustom").value;
+    let Patent = document.getElementById("txtPatent").value;
+    let Notes = document.getElementById("txtNotes").value;
+
+    // let images = document.getElementById("images").value;
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    // validaciones
+    // ... aun no hay validaciones
+
+    const imageInput = document.getElementById('images');
+    const images = imageInput.files;
+
+    const fileInput = document.getElementById('files');
+    const files = fileInput.files;
+
+    const formData = new FormData();
+    for (const image of images) {
+        formData.append('images[]', image);
+    }
+    for (const file of files) {
+        formData.append('files[]', file);
+    }
+    formData.append('asset_id',asset_id);
+    formData.append('asset',Asset);
+    formData.append('customer',Customer);
+    formData.append('description',Description);
+    formData.append('brand',Brand);
+    formData.append('model',Model);
+    formData.append('serial',SerialN);
+    formData.append('location',Location);
+    formData.append('pediment',Pediment);
+    formData.append('invoice',Invoice);
+    formData.append('invDate',InvDate);
+    formData.append('regime',Regime);
+    formData.append('custom',Custom);
+    formData.append('patent',Patent);
+    formData.append('notes',Notes);
+
+    status = 'Entrada';
+
+    try{
+    if(document.getElementById('chkSalida').checked)
+    {
+      status = 'Salida';
+      let Motivo_Salida = document.getElementById("txtMotivo").value;
+      formData.append('motivo_salida',Motivo_Salida);
+    }} catch{
+      // chkSalida no existe, vamos a ignorarlo
+    }
+
+    formData.append('status',status);
+
+    //enviar request
+    fetch("{% url 'assets:assetCreateOrUpdate'%}", {
+      method: 'POST', // Specify the HTTP method as POST
+      headers: {
+        'X-CSRFToken': csrftoken // important since this is a POST request
+      },
+      body: formData//JSON.stringify(postData) // Convert the JavaScript object to a JSON string
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json(); // Parse the JSON response
+    })
+    .then(data => {
+      alert(data['message']);
+      window.location.href = "{% url 'assets:index' %}";
+    })
+    .catch(error => {
+      alert('Error:', error);
+    });
+  }
+
+  function deleteImg(id)
+  {
+    fetch("{% url 'assets:assetImageDelete' %}/" + id, {
+      method: 'GET',
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json(); // Parse the JSON response
+    })
+    .then(data => {
+      if(data['status'] == 'success')
+      {
+        document.getElementById('img_card_'+id).remove();
+      }
+      alert(data['message']);
+    })
+    .catch(error => {
+      alert('Error:', error);
+    });
+  }
+
+  function deleteFile(id)
+  {
+    fetch("{% url 'assets:assetFileDelete' %}/" + id, {
+      method: 'GET',
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json(); // Parse the JSON response
+    })
+    .then(data => {
+      if(data['status'] == 'success')
+      {
+        document.getElementById('file_card_'+id).remove();
+      }
+      alert(data['message']);
+    })
+    .catch(error => {
+      alert('Error:', error);
+    });
+  }
+
+  function modoSalida()
+  {
+    campo_salida = document.getElementById('campo_salida');
+    if(campo_salida.style.display == 'none')
+    {
+      campo_salida.style.display = 'block';
+    }
+    else {
+      if(document.getElementById("txtMotivo").value.length > 0)
+      {
+        if(!confirm('Desea cambiar el status de este activo sin eliminar el motivo de salida?'))
+        {
+          document.getElementById('chkSalida').checked = true;
+          document.getElementById('chkEntrada').checked = false;
+          return;
+        }
+      }
+      campo_salida.style.display = 'none';
+    }
+  }
+
+  function verQr(url)
+  {
+    window.open(url, '_blank').focus();
+  }
+
+</script>
+{% endblock %}
