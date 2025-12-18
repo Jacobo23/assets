@@ -1,7 +1,10 @@
 FROM python:3.14.2-slim-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONBUFFERED=1
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update 
+RUN apt-get -y install python3-pip python3-cffi python3-brotli libpango-1.0-0 libpangoft2-1.0-0
 
 WORKDIR /app
 
