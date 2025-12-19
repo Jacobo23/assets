@@ -1,5 +1,2 @@
 env
 .DS_Store
-.media/asset_files/*.pdf
-.media/asset_images/*
-.media/asset_qr/*
