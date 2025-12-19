@@ -93,8 +93,9 @@ class LabelsView(LoginRequiredMixin, PDFView):
         context = super().get_context_data(*args, **kwargs)
         asset = Asset.objects.get(pk=kwargs['asset_id'])
         context['asset'] = asset
-        # media_folder_url = self.request.get_host()
-        media_folder_url = "https://serene-sound-59457.pktriot.xyz"
+        media_folder_url = settings.HOSTNAME
+        if(media_folder_url is None):
+            media_folder_url = "http://"+self.request.get_host()
 
         
         context['url'] = default_url_fetcher(media_folder_url+"/media/logo.png")['redirected_url']

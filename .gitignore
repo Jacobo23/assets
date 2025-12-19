@@ -1,5 +1,5 @@
-.env
+env/
 .DS_Store
-.media/asset_files/*.pdf
-.media/asset_images/*
-.media/asset_qr/*
+media/asset_files/
+media/asset_images/
+media/asset_qr/
