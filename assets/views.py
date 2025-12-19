@@ -95,19 +95,19 @@ class LabelsView(LoginRequiredMixin, PDFView):
         context['asset'] = asset
         media_folder_url = settings.HOSTNAME
         if(media_folder_url is None):
-            media_folder_url = "http://"+self.request.get_host()
+            media_folder_url = self.request.get_host()
 
         
-        context['url'] = default_url_fetcher(media_folder_url+"/media/logo.png")['redirected_url']
+        context['url'] = default_url_fetcher(settings.PROTOCOL+media_folder_url+"/media/logo.png")['redirected_url']
         # crear el QR
         view_asset_url = reverse('assets:edit',args=[asset.pk])
-        qr = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://'+media_folder_url+view_asset_url
+        qr = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+settings.PROTOCOL+media_folder_url+view_asset_url
         
         qr_url = asset.loadQR(qr)
         qr_url = qr_url.image.name
         context['imgname'] = qr_url
         context['host'] = media_folder_url
-        context['qr'] = default_url_fetcher(media_folder_url+"/media/"+qr_url)['redirected_url']
+        context['qr'] = default_url_fetcher(settings.PROTOCOL+media_folder_url+"/media/"+qr_url)['redirected_url']
 
         return context
     
