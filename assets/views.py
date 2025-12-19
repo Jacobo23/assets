@@ -93,16 +93,20 @@ class LabelsView(LoginRequiredMixin, PDFView):
         context = super().get_context_data(*args, **kwargs)
         asset = Asset.objects.get(pk=kwargs['asset_id'])
         context['asset'] = asset
-        media_folder_url = self.request.get_host()
+        # media_folder_url = self.request.get_host()
+        media_folder_url = "https://serene-sound-59457.pktriot.xyz"
+
         
-        context['url'] = default_url_fetcher("http://"+media_folder_url+"/media/logo.png")['redirected_url']
+        context['url'] = default_url_fetcher(media_folder_url+"/media/logo.png")['redirected_url']
         # crear el QR
         view_asset_url = reverse('assets:edit',args=[asset.pk])
         qr = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://'+media_folder_url+view_asset_url
         
         qr_url = asset.loadQR(qr)
         qr_url = qr_url.image.name
-        context['qr'] = default_url_fetcher("http://"+media_folder_url+"/media/"+qr_url)['redirected_url']
+        context['imgname'] = qr_url
+        context['host'] = media_folder_url
+        context['qr'] = default_url_fetcher(media_folder_url+"/media/"+qr_url)['redirected_url']
 
         return context
     
