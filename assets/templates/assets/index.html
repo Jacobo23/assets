@@ -6,11 +6,11 @@
   <div class="card-body">
     <div class="search-form-field">
       <label>Filtrar</label>
-      <input type="text" class="form-control" id="txtParam" value="{{ request.GET.param }}"/>
+      <input type="text" class="form-control" id="txtParam" value="{{ request.GET.param }}" onblur="onFiltrarAction()" onkeydown="onFiltrarKeydown(event)"/>
     </div>
     <div class="search-form-field">
       <label>Cliente {{request.GET.customer}}</label>
-      <select class="form-select" id="txtCustomer">
+      <select class="form-select" id="txtCustomer" onchange="buscar()">
         <option value="0">---</option>
         {% for customer in customers %}
             <option value="{{ customer.pk }}">{{ customer.name }}</option>
@@ -103,6 +103,17 @@
 
     const queryString = new URLSearchParams(params).toString();
     location.href = "{% url 'assets:index' %}?"+queryString;
+  }
+  function onFiltrarAction()
+  {
+    buscar();
+  }
+  function onFiltrarKeydown(event)
+  {
+    if (event.key === 'Enter') {
+      // Get the value from the input field
+      buscar();
+    }
   }
 
   window.onload = function() {
