@@ -23,3 +23,5 @@ admin.site.register(AssetQR)
 admin.site.register(Transaction)
 admin.site.register(CustomerForUser)
 
+admin.site.site_header = "Administracion"
+admin.site.site_title = "Assets Admin Page"
