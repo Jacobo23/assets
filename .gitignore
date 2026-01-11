@@ -3,4 +3,5 @@ env/
 media/asset_files/
 media/asset_images/
 media/asset_qr/
+.db.sqlite3
 db.sqlite3
