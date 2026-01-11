@@ -27,6 +27,7 @@
     </div>
 
     <button type="button" class="btn btn-primary" onclick="buscar()">{% bs_icon 'search' %}</button>
+    <button type="button" class="btn btn-secondary" style="float:right" onclick="download()">{% bs_icon 'file-earmark-arrow-down' %}</button>
     <hr/>
     <table class="table table-hover">
       <thead>
@@ -82,6 +83,11 @@
 <script>
   function buscar()
   {
+    const queryString = builtQueryString();
+    location.href = "{% url 'assets:index' %}?"+queryString;
+  }
+  function builtQueryString()
+  {
     const param = document.getElementById('txtParam').value.trim();
     const cliente = document.getElementById('txtCustomer').value;
     const esEntrada = document.getElementById('chkEntrada').checked;
@@ -101,8 +107,7 @@
       params.customer = cliente;
     }
 
-    const queryString = new URLSearchParams(params).toString();
-    location.href = "{% url 'assets:index' %}?"+queryString;
+    return new URLSearchParams(params).toString();
   }
   function onFiltrarAction()
   {
@@ -114,6 +119,11 @@
       // Get the value from the input field
       buscar();
     }
+  }
+  function download()
+  {
+    const queryString = builtQueryString();
+    window.open("{% url 'assets:exportAssets' %}?"+queryString, '_blank');
   }
 
   window.onload = function() {
