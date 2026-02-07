@@ -9,7 +9,7 @@
       <input type="text" class="form-control" id="txtParam" value="{{ request.GET.param }}" onblur="onFiltrarAction()" onkeydown="onFiltrarKeydown(event)"/>
     </div>
     <div class="search-form-field">
-      <label>Cliente {{request.GET.customer}}</label>
+      <label>Cliente</label>
       <select class="form-select" id="txtCustomer" onchange="buscar()">
         <option value="0">---</option>
         {% for customer in customers %}
@@ -19,9 +19,9 @@
     </div>
     <div class="search-form-field">
       <div class="btn-group" role="group" aria-label="Basic mixed styles example" style="margin-left: 10px;">
-        <input type="radio" class="btn-check" name="options-outlined" id="chkEntrada" autocomplete="off" {% if request.GET.status != 'Salida' %} checked{% endif %} onclick="modoSalida()">
+        <input type="radio" class="btn-check" name="options-outlined" id="chkEntrada" autocomplete="off" {% if request.GET.status != 'Salida' %} checked{% endif %} onclick="buscar()()">
         <label class="btn btn-outline-success" for="chkEntrada">Entrada</label>
-        <input type="radio" class="btn-check" name="options-outlined" id="chkSalida" autocomplete="off" {% if request.GET.status == 'Salida' %} checked{% endif %} onclick="modoSalida()">
+        <input type="radio" class="btn-check" name="options-outlined" id="chkSalida" autocomplete="off" {% if request.GET.status == 'Salida' %} checked{% endif %} onclick="buscar()()">
         <label class="btn btn-outline-danger" for="chkSalida">Salida</label>
       </div>
     </div>

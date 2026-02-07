@@ -22,7 +22,6 @@
         <div class="form-field">
           <label>Cliente</label>
           <select class="form-select" id="txtCustomer" {% if asset is not None %}disabled{% endif %}>
-            <option selected value="0">---</option>
             {% for customer in customers %}
                 <option value="{{ customer.pk }}"{% if customer.pk == asset.customer.pk %}selected{% endif %}>{{ customer.name }}</option>
             {% endfor %}
@@ -81,7 +80,7 @@
         </div>
         <div class="form-field">
           <label>Pedimento</label>
-          <input type="text" class="form-control" id="txtPediment" value="{{ asset.pediment }}"/>
+          <input type="text" class="form-control" id="txtPediment" value="{{ asset.pediment }}" maxlength="7"/>
         </div>
       </div>
       <div class="col-md-6 d-flex flex-column vertical-separator">
@@ -199,6 +198,27 @@
 {% endblock %}
 {% block scripts %}
 <script>
+  const pedimentoField = document.querySelector('#txtPediment');
+
+  pedimentoField.addEventListener('keydown', function(event) {
+      // Allow essential keys: Backspace, Tab, Enter, Escape, Arrow keys, Delete
+      const allowedKeys = [8, 9, 13, 27, 46, 37, 38, 39, 40];
+      
+      // Check if the key is a digit (0-9) on the main keyboard
+      const isMainDigit = event.keyCode >= 48 && event.keyCode <= 57;
+      
+      // Check if the key is a digit (0-9) on the numpad
+      const isNumpadDigit = event.keyCode >= 96 && event.keyCode <= 105;
+
+      // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X (for copy/paste functionality)
+      const isCtrlCommand = event.ctrlKey && [65, 67, 86, 88].includes(event.keyCode);
+
+      if (allowedKeys.includes(event.keyCode) || isMainDigit || isNumpadDigit || isCtrlCommand) {
+          return; // Let the keypress happen
+      } else {
+          event.preventDefault(); // Stop the character from being entered
+      }
+  });
   function onSave()
   {
     //procesa los campos
@@ -220,7 +240,14 @@
 
     // let images = document.getElementById("images").value;
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    // validaciones
+
+    // VALIDACIONES
+    if(Pediment.length != 7 || isNaN(Pediment) || isNaN(parseFloat(Pediment)))
+    {
+      alert('el campo Pedimento debe tener 7 digitos.');
+      return;
+    }
+
     // ... aun no hay validaciones
 
     const imageInput = document.getElementById('images');
@@ -282,6 +309,10 @@
     })
     .then(data => {
       alert(data['message']);
+      if(data['status'] == 'error')
+      {
+        return;
+      }
       window.location.href = "{% url 'assets:index' %}";
     })
     .catch(error => {

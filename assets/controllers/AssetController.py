@@ -34,7 +34,7 @@ def testJson(request):
     return JsonResponse(data)
 
 
-def search(asset_identifier = None, asset = None, customer_id = None, description = None, pediment = None, invoice = None, status = None):
+def search(user, asset_identifier = None, asset = None, customer_id = None, description = None, pediment = None, invoice = None, status = None):
     if(status is None):
         status = Status.objects.get(name = 'Entrada')
     else:
@@ -44,6 +44,10 @@ def search(asset_identifier = None, asset = None, customer_id = None, descriptio
     if (customer_id is not None or customer_id == 0):
         customer = Customer.objects.get(pk=customer_id)
         assets_query = Asset.objects.filter(customer = customer)
+    else:
+        # cliente no fue especificado, debemos mostrar todo los cliente pero hay que revisar solo los que estan autorizados para este usuario
+        allowed_customers = Customer.getCustomersForUser(user)
+        assets_query = Asset.objects.filter(customer__in = allowed_customers)
     
     # Add a lot of OR condittions
     query = Q()
@@ -69,13 +73,21 @@ def createOrUpdate(request):
     action = 'Update Asset'
     data = request.POST
     asset = Asset.objects.filter(pk=int(data.get('asset_id') or 0)).first()
+    customer = Customer.objects.filter(pk=int(data.get('customer') or 0)).first()
 
     if asset is None:
          asset = Asset()
          action = 'Create Asset'
-
+        #  si estamos creando un nuevo asset, validaremos que la conbinacion Asset, Marca Modelo y Serie exista de antemano
+         asset_repetido = Asset.objects.filter(asset=data.get('asset')).filter(brand=data.get('brand')).filter(model=data.get('model')).filter(serial_number=data.get('serial')).filter(customer=customer).first()
+         if asset_repetido is not None:
+             return JsonResponse({
+            'message': 'La conbinacion de Asset, Marca, Modelo y Serie ya se encuentra registrada!',
+            'status': 'error',
+        })
+             
     asset_name = data.get('asset')
-    customer = Customer.objects.filter(pk=int(data.get('customer') or 0)).first()
+    
     description = data.get('description')
     brand = data.get('brand')
     model = data.get('model')

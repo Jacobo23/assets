@@ -25,8 +25,9 @@ SECRET_KEY = 'django-insecure-(1+hzyz_mvn!$!yx342l=p99^zkx$or^k0p=^tdqiz459e1s1g
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-HOSTNAME = "serene-sound-59457.pktriot.xyz"
-PROTOCOL = "https://"
+# HOSTNAME = "serene-sound-59457.pktriot.xyz"
+HOSTNAME = None
+PROTOCOL = "http://"
 
 ALLOWED_HOSTS = ['*']
 

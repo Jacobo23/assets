@@ -48,7 +48,7 @@ def index(request):
     status = data.get('status')
     # search puede ser invocado sin parametros (pero nos daria todos los registros)
     # en este caso solo utilizamos in campo "param" que lo usaremos para buscar como asset, description, pediment, etc...
-    assets = AssetController.search(param, param, customer, param, param, param, status)
+    assets = AssetController.search(request.user,param, param, customer, param, param, param, status)
     context = AssetController.getIndexContext(assets, request.user)
     return render(request, "assets/index.html", context)
 
@@ -76,7 +76,7 @@ def exportAssetsExcel(request):
     status = data.get('status')
     # search puede ser invocado sin parametros (pero nos daria todos los registros)
     # en este caso solo utilizamos in campo "param" que lo usaremos para buscar como asset, description, pediment, etc...
-    assets = AssetController.search(param, param, customer, param, param, param, status)
+    assets = AssetController.search(request.user, param, param, customer, param, param, param, status)
     return AssetController.exportAssets(list(assets))
 
 

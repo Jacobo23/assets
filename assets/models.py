@@ -119,7 +119,6 @@ class Asset(models.Model):
     def getTransactions(self):
         return Transaction.objects.filter(asset=self)
     def warnings(self):
-        Activity.slog('sdded')
         # podemos usar esta funcion para dar alertas sobre algun asset
         # Ex: Falta de pedimento o factura
         warnings = []
